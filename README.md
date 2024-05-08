@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/JokerTrickster/data_structure/badge.svg?branch=main)](https://coveralls.io/github/JokerTrickster/data_structure?branch=main)
+
 # data_structure
 Implement data structures in go language (queue, stack, linked list)
 
