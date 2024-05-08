@@ -1,36 +1,44 @@
-on: ["push", "pull_request"]
-
-name: Test Coveralls
-
+on: [push, pull_request]
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        go:
+          - "1.21"
+          - "1.20"
+          - "1.19"
+          - "1.18"
+          - "1.17"
+          - "1.16"
+          - "1.15"
+          - "1.14"
+          - "1.13"
+          - "1.12"
+          - "1.11"
 
-  build:
-    name: Build
+    steps:
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go }}
+      - uses: actions/checkout@v4
+      - run: |
+          cd src
+          go test -v -coverprofile=profile.cov ./...
+
+      - name: Send coverage
+        uses: shogo82148/actions-goveralls@v1
+        with:
+          path-to-profile: profile.cov
+          flag-name: Go-${{ matrix.go }}
+          parallel: true
+
+  # notifies that all test jobs are finished.
+  finish:
+    needs: test
     runs-on: ubuntu-latest
     steps:
-
-    - uses: actions/checkout@v1
-
-    - name: Set up Go 1.x
-      uses: actions/setup-go@v2
-      with:
-        go-version: 1.x
-
-    - name: Initialize Go modules
-      run: go mod init github.com/JokerTrickster/data_structure
-
-    - name: Setup Go modules
-      run: go mod download
-
-    - name: Echo current directory
-      run: echo "Current directory is $(pwd)"
-
-    - name: Run tests with coverage
-      run: |
-        cd src
-        go test -coverprofile=coverage.out ./...
-      env:
-        GITHUB_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-
-    - name: Coveralls
-      uses: coverallsapp/github-action@v2
+      - uses: shogo82148/actions-goveralls@v1
+        with:
+          parallel-finished: true
