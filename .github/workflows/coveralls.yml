@@ -1,25 +1,29 @@
-name: Quality
-on: [push, pull_request]
+on: ["push", "pull_request"]
+
+name: Test Coveralls
+
 jobs:
-  test:
-    name: Test with Coverage
+
+  build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
-    - name: Set up Go
+
+    - uses: actions/checkout@v1
+
+    - name: Set up Go 1.x
       uses: actions/setup-go@v2
       with:
-        go-version: '1.22'
-    - name: Check out code
-      uses: actions/checkout@v4
-    - name: Install dependencies
+        go-version: 1.x
+
+    - name: Setup Go modules
+      run: go mod download
+
+    - name: Run tests with coverage
       run: |
-        go mod download
-    - name: Run Unit tests
-      run: |
-        go test -race -covermode atomic -coverprofile=covprofile ./...
-    - name: Install goveralls
-      run: go install github.com/mattn/goveralls@latest
-    - name: Send coverage
+        go test -coverprofile=coverage.out ./...
       env:
-        COVERALLS_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-      run: goveralls -coverprofile=covprofile -service=github
+        GITHUB_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+
+    - name: Coveralls
+      uses: coverallsapp/github-action@v2
