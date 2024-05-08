@@ -21,12 +21,13 @@ jobs:
 
     - name: Setup Go modules
       run: go mod download
-      
+
     - name: Echo current directory
       run: echo "Current directory is $(pwd)"
 
     - name: Run tests with coverage
       run: |
+        cd src
         go test -coverprofile=coverage.out ./...
       env:
         GITHUB_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
