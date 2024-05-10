@@ -31,3 +31,11 @@ Implement data structures in go language (queue, stack, linked list)
 4. Pop: Removes and returns the top element of the stack.  
 5. Len: Returns the number of elements in the stack.  
 
+-----------------
+### Queue:
+1. Push: Adds a new item to the back of the queue.
+2. Pop: Removes and returns an item from the front of the queue.
+3. Front: Returns the item at the front of the queue without removing it.
+4. Back: Returns the item at the back of the queue without removing it.
+5. Empty: Checks if the queue is empty. Returns true if empty, false otherwise.
+6. Size: Returns the number of items in the queue.
